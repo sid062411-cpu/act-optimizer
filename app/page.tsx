@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/db'
-import { computeSectionStats, computeScoreEntries } from '@/lib/analytics'
+import { computeSectionStats, computeScoreEntries, computeProjectedDate } from '@/lib/analytics'
 import { ScoreTrendChart } from '@/components/ScoreTrendChart'
-import { WeakPointsChart } from '@/components/WeakPointsChart'
 import { PredictionCard } from '@/components/PredictionCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
@@ -13,15 +12,31 @@ export default async function DashboardPage() {
 
   if (results.length === 0) {
     return (
-      <main className="p-6 max-w-2xl mx-auto text-center mt-16">
-        <h1 className="text-3xl font-bold mb-4">ACT Optimizer</h1>
-        <p className="text-muted-foreground mb-6">No tests logged yet. Log your first practice test to get started.</p>
-        <Link href="/log" className="bg-primary text-primary-foreground px-4 py-2 rounded-md">
+      <main className="min-h-[80vh] flex flex-col items-center justify-center p-6 text-center">
+        <div className="text-6xl mb-4">📊</div>
+        <h1 className="text-3xl font-extrabold mb-2">Welcome to ACT Optimizer</h1>
+        <p className="text-muted-foreground mb-8 max-w-sm">
+          Log your first practice test to start tracking your path to a 36.
+        </p>
+        <Link
+          href="/log"
+          className="px-6 py-3 rounded-full bg-primary text-white font-semibold hover:opacity-90 transition-opacity"
+        >
           Log First Test
         </Link>
       </main>
     )
   }
+
+  const latest = results[results.length - 1]
+  const prev = results.length > 1 ? results[results.length - 2] : null
+  const delta = prev !== null ? latest.compositeScore - prev.compositeScore : null
+  const compositeGap = 36 - latest.compositeScore
+  const compositePct = Math.round((latest.compositeScore / 36) * 100)
+
+  const dates = results.map((r) => r.date)
+  const compositeScores = results.map((r) => r.compositeScore)
+  const projectedDate = computeProjectedDate(dates, compositeScores)
 
   const stats = [
     computeSectionStats('english', results.map((r) => r.englishScore)),
@@ -31,20 +46,82 @@ export default async function DashboardPage() {
   const entries = computeScoreEntries(results)
 
   return (
-    <main className="p-6 max-w-5xl mx-auto space-y-8">
-      <h1 className="text-3xl font-bold">ACT Optimizer</h1>
-      <Card>
-        <CardHeader><CardTitle>Score Trend</CardTitle></CardHeader>
-        <CardContent><ScoreTrendChart data={entries} /></CardContent>
-      </Card>
+    <main className="max-w-5xl mx-auto px-6 py-10 space-y-10">
+
+      {/* Hero */}
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold uppercase tracking-widest text-primary mb-1">Current Composite</p>
+          <div className="flex items-end gap-3 flex-wrap">
+            <span className="text-7xl font-extrabold leading-none">{latest.compositeScore}</span>
+            <span className="text-3xl font-bold text-muted-foreground mb-2">/ 36</span>
+            {delta !== null && (
+              <span className={`mb-2 px-3 py-1 rounded-full text-sm font-bold ${
+                delta > 0 ? 'bg-emerald-100 text-emerald-700' :
+                delta < 0 ? 'bg-red-100 text-red-600' :
+                'bg-muted text-muted-foreground'
+              }`}>
+                {delta > 0 ? `+${delta}` : delta} from last test
+              </span>
+            )}
+          </div>
+
+          {/* Composite progress bar */}
+          <div className="mt-4 space-y-1.5 max-w-md">
+            <div className="h-3 rounded-full bg-muted overflow-hidden">
+              <div
+                className="h-full rounded-full bg-primary transition-all"
+                style={{ width: `${compositePct}%` }}
+              />
+            </div>
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>
+                {compositeGap === 0 ? '🎉 Perfect score!' : `${compositeGap} point${compositeGap !== 1 ? 's' : ''} to 36`}
+              </span>
+              <span>
+                Last tested{' '}
+                {latest.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                {' · '}{results.length} test{results.length !== 1 ? 's' : ''} logged
+              </span>
+            </div>
+          </div>
+
+          {/* Projected date */}
+          {projectedDate && (
+            <p className="mt-2 text-sm text-muted-foreground">
+              On track to reach 36 by{' '}
+              <span className="font-semibold text-foreground">
+                {projectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+              </span>
+              {' '}at your current pace
+            </p>
+          )}
+        </div>
+
+        <Link
+          href="/log"
+          className="px-5 py-2.5 rounded-full bg-primary text-white font-semibold text-sm hover:opacity-90 transition-opacity shrink-0 self-start"
+        >
+          + Log Test
+        </Link>
+      </div>
+
+      {/* Section prediction cards */}
       <section>
-        <h2 className="text-xl font-semibold mb-4">Weak Points &amp; Prediction</h2>
+        <h2 className="text-base font-semibold text-muted-foreground uppercase tracking-widest mb-4">Section Breakdown</h2>
         <PredictionCard stats={stats} />
       </section>
-      <Card>
-        <CardHeader><CardTitle>Section Gaps</CardTitle></CardHeader>
-        <CardContent><WeakPointsChart stats={stats} /></CardContent>
+
+      {/* Score trend */}
+      <Card className="shadow-sm">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base font-semibold">Score Trend</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ScoreTrendChart data={entries} />
+        </CardContent>
       </Card>
+
     </main>
   )
 }

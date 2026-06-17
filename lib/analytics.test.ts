@@ -3,6 +3,8 @@ import {
   computeGap,
   computeTrend,
   computeTestsNeeded,
+  computeImprovementRate,
+  computeProjectedDate,
 } from './analytics'
 
 describe('computeComposite', () => {
@@ -15,7 +17,6 @@ describe('computeComposite', () => {
 
 describe('computeGap', () => {
   it('returns 36 minus rounded average', () => {
-    // avg([23,30,34]) = 29, gap = 36-29 = 7
     expect(computeGap([23, 30, 34])).toBe(7)
   })
   it('returns 0 when average rounds to 36', () => {
@@ -31,15 +32,12 @@ describe('computeTrend', () => {
     expect(computeTrend([23, 30, 34])).toBeNull()
   })
   it('returns up when recent 3 average exceeds prior average by more than 1', () => {
-    // prior avg([20,22]) = 21, recent avg([28,30,33]) = 30.3, diff > 1
     expect(computeTrend([20, 22, 28, 30, 33])).toBe('up')
   })
   it('returns down when recent average is lower than prior by more than 1', () => {
-    // prior avg([34,33]) = 33.5, recent avg([30,28,25]) = 27.7, diff < -1
     expect(computeTrend([34, 33, 30, 28, 25])).toBe('down')
   })
   it('returns stable when difference is 1 or less', () => {
-    // prior avg([30,31]) = 30.5, recent avg([30,31,30]) = 30.3, diff ≈ -0.2
     expect(computeTrend([30, 31, 30, 31, 30])).toBe('stable')
   })
 })
@@ -53,10 +51,39 @@ describe('computeTestsNeeded', () => {
     expect(computeTestsNeeded([34, 33])).toBeNull()
   })
   it('returns ceiling of gap divided by average improvement', () => {
-    // improvements: [7, 4], avg: 5.5, latest: 34, gap: 2, ceil(2/5.5) = 1
     expect(computeTestsNeeded([23, 30, 34])).toBe(1)
   })
   it('returns 0 when latest score is already 36', () => {
     expect(computeTestsNeeded([30, 36])).toBe(0)
+  })
+})
+
+describe('computeImprovementRate', () => {
+  it('returns null when fewer than 2 scores', () => {
+    expect(computeImprovementRate([34])).toBeNull()
+  })
+  it('computes average improvement per test to 1 decimal', () => {
+    // improvements: [7, 4], avg = 5.5
+    expect(computeImprovementRate([23, 30, 34])).toBe(5.5)
+  })
+  it('returns negative rate when scores are declining', () => {
+    // improvements: [-2, -3], avg = -2.5
+    expect(computeImprovementRate([34, 32, 29])).toBe(-2.5)
+  })
+})
+
+describe('computeProjectedDate', () => {
+  it('returns null when fewer than 2 dates', () => {
+    expect(computeProjectedDate([new Date()], [34])).toBeNull()
+  })
+  it('returns null when improvement is zero or negative', () => {
+    const dates = [new Date('2026-06-01'), new Date('2026-06-03')]
+    expect(computeProjectedDate(dates, [34, 34])).toBeNull()
+  })
+  it('returns a future Date when there is positive improvement and gap remaining', () => {
+    const dates = [new Date('2026-06-01'), new Date('2026-06-03'), new Date('2026-06-05')]
+    const result = computeProjectedDate(dates, [23, 30, 34])
+    expect(result).toBeInstanceOf(Date)
+    expect(result!.getTime()).toBeGreaterThan(Date.now())
   })
 })

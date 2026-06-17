@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model TestResult {
@@ -18,10 +18,4 @@ model TestResult {
   compositeScore Int
   source         String   @default("EXISTING")
   createdAt      DateTime @default(now())
-}
-
-model GeneratedTest {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  content   String
 }

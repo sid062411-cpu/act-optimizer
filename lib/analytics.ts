@@ -32,6 +32,26 @@ export function computeTestsNeeded(scores: number[]): number | null {
   return Math.ceil((36 - latest) / avgImprovement)
 }
 
+export function computeImprovementRate(scores: number[]): number | null {
+  if (scores.length < 2) return null
+  const improvements = scores.slice(1).map((s, i) => s - scores[i])
+  const avg = improvements.reduce((s, x) => s + x, 0) / improvements.length
+  return Math.round(avg * 10) / 10
+}
+
+export function computeProjectedDate(dates: Date[], scores: number[]): Date | null {
+  const testsNeeded = computeTestsNeeded(scores)
+  if (testsNeeded === null || testsNeeded === 0) return null
+  if (dates.length < 2) return null
+  const dayDiffs = dates.slice(1).map((d, i) =>
+    (d.getTime() - dates[i].getTime()) / (1000 * 60 * 60 * 24)
+  )
+  const avgDays = dayDiffs.reduce((s, x) => s + x, 0) / dayDiffs.length
+  const projected = new Date()
+  projected.setDate(projected.getDate() + Math.round(testsNeeded * avgDays))
+  return projected
+}
+
 export function computeSectionStats(section: SectionKey, scores: number[]): SectionStats {
   return {
     section,
@@ -42,6 +62,7 @@ export function computeSectionStats(section: SectionKey, scores: number[]): Sect
     gap: computeGap(scores),
     trend: computeTrend(scores),
     testsNeeded: computeTestsNeeded(scores),
+    improvementRate: computeImprovementRate(scores),
   }
 }
 
@@ -54,7 +75,8 @@ export function computeScoreEntries(
     compositeScore: number
   }[]
 ): ScoreEntry[] {
-  return results.map((r) => ({
+  return results.map((r, i) => ({
+    label: `Test ${i + 1}`,
     date: r.date.toISOString().split('T')[0],
     englishScore: r.englishScore,
     mathScore: r.mathScore,
