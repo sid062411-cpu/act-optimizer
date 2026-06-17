@@ -5,7 +5,8 @@ import path from 'path'
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
 
 function createPrismaClient() {
-  const dbPath = path.resolve(process.cwd(), 'dev.db')
+  const rawUrl = process.env.DATABASE_URL ?? 'file:./dev.db'
+  const dbPath = path.resolve(process.cwd(), rawUrl.replace(/^file:/, ''))
   const adapter = new PrismaBetterSqlite3({ url: dbPath })
   return new PrismaClient({ adapter })
 }
