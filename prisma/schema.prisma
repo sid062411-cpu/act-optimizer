@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model TestResult {
+  id             String   @id @default(cuid())
+  date           DateTime
+  englishRaw     Int
+  englishScore   Int
+  mathRaw        Int
+  mathScore      Int
+  readingRaw     Int
+  readingScore   Int
+  compositeScore Int
+  source         String   @default("EXISTING")
+  createdAt      DateTime @default(now())
+}
+
+model GeneratedTest {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  content   String
+}
