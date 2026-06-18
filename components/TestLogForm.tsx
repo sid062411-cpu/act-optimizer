@@ -112,7 +112,7 @@ export function TestLogForm() {
 
   return (
     <div className="max-w-lg mx-auto">
-      <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-8">
+      <div className="bg-white dark:bg-card rounded-2xl border border-border/60 shadow-sm p-8">
         <h2 className="text-xl font-bold mb-1">Log Practice Test</h2>
         <p className="text-sm text-muted-foreground mb-6">Enter your scores, missed questions, and what you studied.</p>
 
@@ -182,7 +182,7 @@ export function TestLogForm() {
                       className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                         form.studyTopics.includes(topic)
                           ? 'bg-primary text-white border-primary'
-                          : 'bg-white text-muted-foreground border-border hover:border-primary/40'
+                          : 'bg-transparent text-foreground border-border hover:border-primary/40'
                       }`}
                     >
                       {topic}
@@ -202,7 +202,7 @@ export function TestLogForm() {
               value={form.notes}
               onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))}
               rows={3}
-              className="w-full border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+              className="w-full border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none bg-background text-foreground"
             />
           </div>
 

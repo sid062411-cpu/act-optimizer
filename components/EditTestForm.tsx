@@ -114,7 +114,7 @@ export function EditTestForm({ test }: Props) {
           <textarea
             value={notes} onChange={(e) => setNotes(e.target.value)}
             rows={3} placeholder="Any observations about this test..."
-            className={`${inputCls} resize-none`}
+            className={`${inputCls} resize-none bg-background text-foreground`}
           />
         </div>
         <div>

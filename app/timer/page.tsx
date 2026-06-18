@@ -104,7 +104,7 @@ export default function TimerPage() {
             className={`rounded-2xl border py-4 text-center transition-all ${
               activePreset === i
                 ? `${p.color} text-white border-transparent shadow-md`
-                : 'bg-white border-border/60 hover:border-primary/40'
+                : 'bg-white dark:bg-card border-border/60 hover:border-primary/40 text-foreground'
             }`}
           >
             <p className="font-bold">{p.label}</p>
@@ -160,7 +160,7 @@ export default function TimerPage() {
       </div>
 
       {/* Custom time */}
-      <div className="bg-white rounded-2xl border border-border/60 p-5">
+      <div className="bg-white dark:bg-card rounded-2xl border border-border/60 p-5">
         <p className="text-sm font-semibold mb-3">Custom Duration</p>
         <div className="flex gap-3">
           <input
@@ -168,7 +168,7 @@ export default function TimerPage() {
             value={customMin}
             onChange={(e) => setCustomMin(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && applyCustom()}
-            className="flex-1 border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="flex-1 border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-background text-foreground"
           />
           <button
             onClick={applyCustom}
