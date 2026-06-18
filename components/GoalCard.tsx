@@ -42,7 +42,6 @@ export function GoalCard({ goal, testsNeeded, avgDaysBetweenTests }: Props) {
       body: JSON.stringify({ testDate: date }),
     })
     setSaving(false)
-    setEditing(false)
     router.refresh()
   }
 
@@ -55,7 +54,7 @@ export function GoalCard({ goal, testsNeeded, avgDaysBetweenTests }: Props) {
 
   if (editing) {
     return (
-      <div className="bg-white rounded-2xl border border-primary/30 shadow-sm p-5">
+      <div className="bg-white dark:bg-card rounded-2xl border border-primary/30 shadow-sm p-5">
         <p className="text-sm font-bold uppercase tracking-widest text-primary mb-1">Target Test Date</p>
         <p className="text-sm text-muted-foreground mb-4">Set your ACT date to see if you&apos;re on pace for 36.</p>
         <div className="flex gap-3 items-center flex-wrap">
@@ -64,7 +63,7 @@ export function GoalCard({ goal, testsNeeded, avgDaysBetweenTests }: Props) {
             value={date}
             min={new Date().toISOString().split('T')[0]}
             onChange={(e) => setDate(e.target.value)}
-            className="border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-background text-foreground"
           />
           <button
             onClick={save}
@@ -84,7 +83,7 @@ export function GoalCard({ goal, testsNeeded, avgDaysBetweenTests }: Props) {
   }
 
   return (
-    <div className={`bg-white rounded-2xl border shadow-sm p-5 ${onTrack === false ? 'border-amber-300' : 'border-emerald-300'}`}>
+    <div className={`bg-white dark:bg-card rounded-2xl border shadow-sm p-5 ${onTrack === false ? 'border-amber-300' : 'border-emerald-300'}`}>
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <p className="text-sm font-bold uppercase tracking-widest text-primary mb-1">Target Test Date</p>
