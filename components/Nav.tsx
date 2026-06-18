@@ -7,6 +7,7 @@ const LINKS = [
   { href: '/',        label: 'Dashboard' },
   { href: '/log',     label: 'Log Test'  },
   { href: '/history', label: 'History'   },
+  { href: '/timer',   label: 'Timer'     },
 ]
 
 export function Nav() {

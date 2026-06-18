@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx prisma *)",
+      "Bash(npm test *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(bash *)",
+      "Bash(npx tsc *)",
+      "Bash(curl -s http://localhost:3000/)",
+      "Bash(python3 -c \"import sys; html=sys.stdin.read\\(\\); print\\('ACT Optimizer found:', 'ACT Optimizer' in html\\); print\\('Score Trend found:', 'Score Trend' in html\\); print\\('Section Gaps found:', 'Section Gaps' in html\\); print\\('Weak Points found:', 'Weak Points' in html\\); print\\('recharts found:', 'recharts' in html\\)\")",
+      "Bash(kill 6091)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(npm run *)",
+      "Bash(git commit *)"
+    ]
+  }
+}

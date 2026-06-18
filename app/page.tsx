@@ -1,14 +1,18 @@
 import { prisma } from '@/lib/db'
-import { computeSectionStats, computeScoreEntries, computeProjectedDate } from '@/lib/analytics'
+import { computeSectionStats, computeScoreEntries, computeProjectedDate, computeTestsNeeded } from '@/lib/analytics'
 import { ScoreTrendChart } from '@/components/ScoreTrendChart'
 import { PredictionCard } from '@/components/PredictionCard'
+import { GoalCard } from '@/components/GoalCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
-  const results = await prisma.testResult.findMany({ orderBy: { date: 'asc' } })
+  const [results, goal] = await Promise.all([
+    prisma.testResult.findMany({ orderBy: { date: 'asc' } }),
+    prisma.goal.findFirst({ orderBy: { createdAt: 'desc' } }),
+  ])
 
   if (results.length === 0) {
     return (
@@ -18,10 +22,7 @@ export default async function DashboardPage() {
         <p className="text-muted-foreground mb-8 max-w-sm">
           Log your first practice test to start tracking your path to a 36.
         </p>
-        <Link
-          href="/log"
-          className="px-6 py-3 rounded-full bg-primary text-white font-semibold hover:opacity-90 transition-opacity"
-        >
+        <Link href="/log" className="px-6 py-3 rounded-full bg-primary text-white font-semibold hover:opacity-90 transition-opacity">
           Log First Test
         </Link>
       </main>
@@ -37,6 +38,13 @@ export default async function DashboardPage() {
   const dates = results.map((r) => r.date)
   const compositeScores = results.map((r) => r.compositeScore)
   const projectedDate = computeProjectedDate(dates, compositeScores)
+  const testsNeeded = computeTestsNeeded(compositeScores)
+
+  const avgDaysBetweenTests = dates.length >= 2
+    ? dates.slice(1).reduce((sum, d, i) =>
+        sum + (d.getTime() - dates[i].getTime()) / (1000 * 60 * 60 * 24), 0
+      ) / (dates.length - 1)
+    : null
 
   const stats = [
     computeSectionStats('english', results.map((r) => r.englishScore)),
@@ -44,6 +52,10 @@ export default async function DashboardPage() {
     computeSectionStats('reading', results.map((r) => r.readingScore)),
   ]
   const entries = computeScoreEntries(results)
+
+  const goalForClient = goal
+    ? { id: goal.id, testDate: goal.testDate.toISOString() }
+    : null
 
   return (
     <main className="max-w-5xl mx-auto px-6 py-10 space-y-10">
@@ -65,28 +77,18 @@ export default async function DashboardPage() {
               </span>
             )}
           </div>
-
-          {/* Composite progress bar */}
           <div className="mt-4 space-y-1.5 max-w-md">
             <div className="h-3 rounded-full bg-muted overflow-hidden">
-              <div
-                className="h-full rounded-full bg-primary transition-all"
-                style={{ width: `${compositePct}%` }}
-              />
+              <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${compositePct}%` }} />
             </div>
             <div className="flex justify-between text-xs text-muted-foreground">
+              <span>{compositeGap === 0 ? '🎉 Perfect score!' : `${compositeGap} point${compositeGap !== 1 ? 's' : ''} to 36`}</span>
               <span>
-                {compositeGap === 0 ? '🎉 Perfect score!' : `${compositeGap} point${compositeGap !== 1 ? 's' : ''} to 36`}
-              </span>
-              <span>
-                Last tested{' '}
-                {latest.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                Last tested {latest.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                 {' · '}{results.length} test{results.length !== 1 ? 's' : ''} logged
               </span>
             </div>
           </div>
-
-          {/* Projected date */}
           {projectedDate && (
             <p className="mt-2 text-sm text-muted-foreground">
               On track to reach 36 by{' '}
@@ -97,16 +99,19 @@ export default async function DashboardPage() {
             </p>
           )}
         </div>
-
-        <Link
-          href="/log"
-          className="px-5 py-2.5 rounded-full bg-primary text-white font-semibold text-sm hover:opacity-90 transition-opacity shrink-0 self-start"
-        >
+        <Link href="/log" className="px-5 py-2.5 rounded-full bg-primary text-white font-semibold text-sm hover:opacity-90 transition-opacity shrink-0 self-start">
           + Log Test
         </Link>
       </div>
 
-      {/* Section prediction cards */}
+      {/* Goal tracker */}
+      <GoalCard
+        goal={goalForClient}
+        testsNeeded={testsNeeded}
+        avgDaysBetweenTests={avgDaysBetweenTests}
+      />
+
+      {/* Section cards */}
       <section>
         <h2 className="text-base font-semibold text-muted-foreground uppercase tracking-widest mb-4">Section Breakdown</h2>
         <PredictionCard stats={stats} />

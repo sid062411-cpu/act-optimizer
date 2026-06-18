@@ -7,15 +7,25 @@ datasource db {
 }
 
 model TestResult {
-  id             String   @id @default(cuid())
-  date           DateTime
-  englishRaw     Int
-  englishScore   Int
-  mathRaw        Int
-  mathScore      Int
-  readingRaw     Int
-  readingScore   Int
-  compositeScore Int
-  source         String   @default("EXISTING")
-  createdAt      DateTime @default(now())
+  id              String   @id @default(cuid())
+  date            DateTime
+  englishRaw      Int
+  englishScore    Int
+  mathRaw         Int
+  mathScore       Int
+  readingRaw      Int
+  readingScore    Int
+  compositeScore  Int
+  source          String   @default("EXISTING")
+  notes           String?
+  studyTopics     String   @default("[]")
+  missedQuestions String   @default("{}")
+  createdAt       DateTime @default(now())
+}
+
+model Goal {
+  id        String   @id @default(cuid())
+  testDate  DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

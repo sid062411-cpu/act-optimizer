@@ -7,12 +7,15 @@ type TestResultInput = {
   englishRaw: number; englishScore: number
   mathRaw: number;    mathScore: number
   readingRaw: number; readingScore: number
+  notes?: string
+  studyTopics?: string[]
+  missedQuestions?: Record<string, number[]>
 }
 
 export function validateTestInput(input: TestResultInput): void {
-  if (input.englishRaw < 0 || input.englishRaw > 75)   throw new Error('englishRaw must be 0–75')
-  if (input.mathRaw < 0    || input.mathRaw > 60)       throw new Error('mathRaw must be 0–60')
-  if (input.readingRaw < 0 || input.readingRaw > 40)    throw new Error('readingRaw must be 0–40')
+  if (input.englishRaw < 0 || input.englishRaw > 75)    throw new Error('englishRaw must be 0–75')
+  if (input.mathRaw < 0    || input.mathRaw > 60)        throw new Error('mathRaw must be 0–60')
+  if (input.readingRaw < 0 || input.readingRaw > 40)     throw new Error('readingRaw must be 0–40')
   if (input.englishScore < 1 || input.englishScore > 36) throw new Error('englishScore must be 1–36')
   if (input.mathScore < 1    || input.mathScore > 36)    throw new Error('mathScore must be 1–36')
   if (input.readingScore < 1 || input.readingScore > 36) throw new Error('readingScore must be 1–36')
@@ -38,7 +41,10 @@ export async function POST(req: Request) {
       mathRaw: body.mathRaw,       mathScore: body.mathScore,
       readingRaw: body.readingRaw, readingScore: body.readingScore,
       compositeScore: composite,
-      source: 'EXISTING',
+      source: 'MANUAL',
+      notes: body.notes ?? null,
+      studyTopics: JSON.stringify(body.studyTopics ?? []),
+      missedQuestions: JSON.stringify(body.missedQuestions ?? {}),
     },
   })
   return NextResponse.json(result, { status: 201 })
