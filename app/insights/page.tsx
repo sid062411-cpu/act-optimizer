@@ -78,9 +78,9 @@ export default async function InsightsPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { label: 'Best Composite', value: bestComposite, sub: `Top ${100 - pct + 1}%`, color: 'text-primary' },
-            { label: 'Best English',   value: bestEnglish,   sub: '/ 36', color: 'text-blue-600' },
-            { label: 'Best Math',      value: bestMath,      sub: '/ 36', color: 'text-emerald-600' },
-            { label: 'Best Reading',   value: bestReading,   sub: '/ 36', color: 'text-amber-600' },
+            { label: 'Best English',   value: bestEnglish,   sub: '/ 36', color: 'text-blue-600 dark:text-blue-400' },
+            { label: 'Best Math',      value: bestMath,      sub: '/ 36', color: 'text-emerald-600 dark:text-emerald-400' },
+            { label: 'Best Reading',   value: bestReading,   sub: '/ 36', color: 'text-amber-600 dark:text-amber-400' },
           ].map(({ label, value, sub, color }) => (
             <div key={label} className="bg-white dark:bg-card rounded-2xl border border-border/60 shadow-sm p-5 text-center">
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">{label}</p>
@@ -90,7 +90,7 @@ export default async function InsightsPage() {
           ))}
         </div>
         <div className="mt-4 bg-white dark:bg-card rounded-2xl border border-border/60 shadow-sm p-5 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-2xl">🚀</div>
+          <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-2xl">🚀</div>
           <div>
             <p className="font-bold text-lg">+{totalImprovement} points overall</p>
             <p className="text-sm text-muted-foreground">
@@ -108,9 +108,9 @@ export default async function InsightsPage() {
             <thead className="bg-muted/50">
               <tr>
                 <th className="text-left px-5 py-3 font-semibold text-foreground">Test</th>
-                <th className="text-left px-5 py-3 font-semibold text-blue-600">English</th>
-                <th className="text-left px-5 py-3 font-semibold text-emerald-600">Math</th>
-                <th className="text-left px-5 py-3 font-semibold text-amber-600">Reading</th>
+                <th className="text-left px-5 py-3 font-semibold text-blue-600 dark:text-blue-400">English</th>
+                <th className="text-left px-5 py-3 font-semibold text-emerald-600 dark:text-emerald-400">Math</th>
+                <th className="text-left px-5 py-3 font-semibold text-amber-600 dark:text-amber-400">Reading</th>
               </tr>
             </thead>
             <tbody>
@@ -155,9 +155,9 @@ export default async function InsightsPage() {
           <p className="text-sm text-muted-foreground mb-4">Questions you&apos;ve missed on 2 or more tests — these are your priority practice targets.</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
-              { key: 'english', label: 'English', color: 'bg-blue-100 text-blue-700', items: repeatedMisses.english },
-              { key: 'math',    label: 'Math',    color: 'bg-emerald-100 text-emerald-700', items: repeatedMisses.math },
-              { key: 'reading', label: 'Reading', color: 'bg-amber-100 text-amber-700', items: repeatedMisses.reading },
+              { key: 'english', label: 'English', color: 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300', items: repeatedMisses.english },
+              { key: 'math',    label: 'Math',    color: 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300', items: repeatedMisses.math },
+              { key: 'reading', label: 'Reading', color: 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300', items: repeatedMisses.reading },
             ].map(({ key, label, color, items }) => (
               <div key={key} className="bg-white dark:bg-card rounded-2xl border border-border/60 shadow-sm p-5">
                 <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">{label}</p>
@@ -191,8 +191,8 @@ export default async function InsightsPage() {
                   <span className="text-xs text-muted-foreground ml-2">{count} test{count !== 1 ? 's' : ''}</span>
                 </div>
                 <span className={`text-sm font-bold px-3 py-1 rounded-full ${
-                  avg > 0 ? 'bg-emerald-100 text-emerald-700' :
-                  avg < 0 ? 'bg-red-100 text-red-600' :
+                  avg > 0 ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300' :
+                  avg < 0 ? 'bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400' :
                   'bg-muted text-muted-foreground'
                 }`}>
                   {avg > 0 ? '+' : ''}{avg} pts

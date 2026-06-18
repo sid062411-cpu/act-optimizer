@@ -1,7 +1,7 @@
 import type { SectionStats } from '@/types'
 
 const TREND_LABEL: Record<string, string> = { up: '↑ Improving', stable: '→ Stable', down: '↓ Declining' }
-const TREND_COLOR: Record<string, string> = { up: 'text-emerald-600', stable: 'text-amber-600', down: 'text-red-500' }
+const TREND_COLOR: Record<string, string> = { up: 'text-emerald-600 dark:text-emerald-400', stable: 'text-amber-600 dark:text-amber-400', down: 'text-red-500 dark:text-red-400' }
 
 const STUDY_TIPS: Record<string, string> = {
   english: 'Punctuation, sentence structure & rhetorical skills',
@@ -28,7 +28,7 @@ export function PredictionCard({ stats }: { stats: SectionStats[] }) {
         return (
           <div
             key={s.section}
-            className={`bg-white rounded-2xl border shadow-sm p-5 space-y-4 ${
+            className={`bg-white dark:bg-card rounded-2xl border shadow-sm p-5 space-y-4 ${
               isPriority ? 'border-primary/40 ring-1 ring-primary/20' : 'border-border/60'
             }`}
           >
@@ -47,7 +47,7 @@ export function PredictionCard({ stats }: { stats: SectionStats[] }) {
                   </span>
                 )}
                 {s.gap === 0 ? (
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Mastered ✓</span>
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300">Mastered ✓</span>
                 ) : s.trend ? (
                   <span className={`text-xs font-semibold ${TREND_COLOR[s.trend]}`}>{TREND_LABEL[s.trend]}</span>
                 ) : null}
@@ -71,7 +71,7 @@ export function PredictionCard({ stats }: { stats: SectionStats[] }) {
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>{pct}% to 36</span>
                 {s.improvementRate !== null && (
-                  <span className={s.improvementRate > 0 ? 'text-emerald-600' : 'text-red-500'}>
+                  <span className={s.improvementRate > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400'}>
                     avg {s.improvementRate > 0 ? '+' : ''}{s.improvementRate} pts/test
                   </span>
                 )}
@@ -84,7 +84,7 @@ export function PredictionCard({ stats }: { stats: SectionStats[] }) {
                 {s.testsNeeded !== null ? (
                   <p className="text-sm font-semibold">~{s.testsNeeded} more test{s.testsNeeded !== 1 ? 's' : ''} to reach 36</p>
                 ) : (
-                  <p className="text-sm font-semibold text-amber-600">Score plateauing — mix up your practice</p>
+                  <p className="text-sm font-semibold text-amber-600 dark:text-amber-400">Score plateauing — mix up your practice</p>
                 )}
                 <p className="text-xs text-muted-foreground">Focus: {STUDY_TIPS[s.section]}</p>
               </div>

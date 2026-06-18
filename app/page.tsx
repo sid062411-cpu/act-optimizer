@@ -74,8 +74,8 @@ export default async function DashboardPage() {
             </span>
             {delta !== null && (
               <span className={`mb-2 px-3 py-1 rounded-full text-sm font-bold ${
-                delta > 0 ? 'bg-emerald-100 text-emerald-700' :
-                delta < 0 ? 'bg-red-100 text-red-600' :
+                delta > 0 ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300' :
+                delta < 0 ? 'bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400' :
                 'bg-muted text-muted-foreground'
               }`}>
                 {delta > 0 ? `+${delta}` : delta} from last test

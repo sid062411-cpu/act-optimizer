@@ -5,9 +5,9 @@ import { rawToScaled, getPercentile, rawNeededForScore } from '@/lib/actScales'
 import { computeComposite } from '@/lib/analytics'
 
 const SECTIONS = [
-  { key: 'english' as const, label: 'English', max: 75, color: 'text-blue-600' },
-  { key: 'math'    as const, label: 'Math',    max: 60, color: 'text-emerald-600' },
-  { key: 'reading' as const, label: 'Reading', max: 40, color: 'text-amber-600' },
+  { key: 'english' as const, label: 'English', max: 75, color: 'text-blue-600 dark:text-blue-400' },
+  { key: 'math'    as const, label: 'Math',    max: 60, color: 'text-emerald-600 dark:text-emerald-400' },
+  { key: 'reading' as const, label: 'Reading', max: 40, color: 'text-amber-600 dark:text-amber-400' },
 ]
 
 export default function CalculatorPage() {

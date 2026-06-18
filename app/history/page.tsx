@@ -12,10 +12,10 @@ import { CsvExportButton } from '@/components/CsvExportButton'
 export const dynamic = 'force-dynamic'
 
 function scoreColor(score: number): string {
-  if (score >= 34) return 'text-emerald-600 font-semibold'
-  if (score >= 30) return 'text-blue-600 font-semibold'
-  if (score >= 26) return 'text-amber-600 font-semibold'
-  return 'text-red-500 font-semibold'
+  if (score >= 34) return 'text-emerald-600 dark:text-emerald-400 font-semibold'
+  if (score >= 30) return 'text-blue-600 dark:text-blue-400 font-semibold'
+  if (score >= 26) return 'text-amber-600 dark:text-amber-400 font-semibold'
+  return 'text-red-500 dark:text-red-400 font-semibold'
 }
 
 export default async function HistoryPage() {

@@ -84,9 +84,9 @@ export function EditTestForm({ test }: Props) {
         <h2 className="font-semibold text-sm uppercase tracking-widest text-muted-foreground">Raw Scores</h2>
         <div className="grid grid-cols-3 gap-4">
           {[
-            { label: 'English', max: 75, val: englishRaw, set: setEnglishRaw, scaled: eScore, color: 'text-blue-600' },
-            { label: 'Math',    max: 60, val: mathRaw,    set: setMathRaw,    scaled: mScore, color: 'text-emerald-600' },
-            { label: 'Reading', max: 40, val: readingRaw, set: setReadingRaw, scaled: rScore, color: 'text-amber-600' },
+            { label: 'English', max: 75, val: englishRaw, set: setEnglishRaw, scaled: eScore, color: 'text-blue-600 dark:text-blue-400' },
+            { label: 'Math',    max: 60, val: mathRaw,    set: setMathRaw,    scaled: mScore, color: 'text-emerald-600 dark:text-emerald-400' },
+            { label: 'Reading', max: 40, val: readingRaw, set: setReadingRaw, scaled: rScore, color: 'text-amber-600 dark:text-amber-400' },
           ].map(({ label, max, val, set, scaled, color }) => (
             <div key={label}>
               <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wider">{label} / {max}</label>

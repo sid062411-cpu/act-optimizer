@@ -108,7 +108,7 @@ export function GoalCard({ goal, testsNeeded, avgDaysBetweenTests }: Props) {
           <p className="text-xs text-muted-foreground mt-0.5">tests you can fit</p>
         </div>
         <div className="text-center">
-          <p className={`text-lg font-extrabold ${onTrack === true ? 'text-emerald-600' : onTrack === false ? 'text-amber-600' : 'text-muted-foreground'}`}>
+          <p className={`text-lg font-extrabold ${onTrack === true ? 'text-emerald-600 dark:text-emerald-400' : onTrack === false ? 'text-amber-600 dark:text-amber-400' : 'text-muted-foreground'}`}>
             {onTrack === true ? '✓ On Track' : onTrack === false ? '⚠ Tight' : '—'}
           </p>
           <p className="text-xs text-muted-foreground mt-0.5">pace to 36</p>
@@ -116,7 +116,7 @@ export function GoalCard({ goal, testsNeeded, avgDaysBetweenTests }: Props) {
       </div>
 
       {onTrack === false && testsNeeded !== null && testsAvailable !== null && (
-        <p className="mt-3 text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2">
+        <p className="mt-3 text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/30 rounded-lg px-3 py-2">
           You need ~{testsNeeded} more test{testsNeeded !== 1 ? 's' : ''} but only have time for ~{testsAvailable}. Consider testing more frequently.
         </p>
       )}
