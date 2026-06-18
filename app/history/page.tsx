@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db'
+import type { TestResult } from '@prisma/client'
 import {
   Table, TableBody, TableCell, TableHead,
   TableHeader, TableRow,
@@ -54,7 +55,7 @@ export default async function HistoryPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {results.map((r) => (
+              {results.map((r: TestResult) => (
                 <TableRow key={r.id} className="hover:bg-muted/30 transition-colors">
                   <TableCell className="text-sm text-muted-foreground">
                     {new Date(r.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
