@@ -6,6 +6,8 @@ import {
 } from '@/components/ui/table'
 import Link from 'next/link'
 import { PrintButton } from '@/components/PrintButton'
+import { DeleteTestButton } from '@/components/DeleteTestButton'
+import { CsvExportButton } from '@/components/CsvExportButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,12 +24,13 @@ export default async function HistoryPage() {
   return (
     <main className="max-w-5xl mx-auto px-6 py-10">
 
-      <div className="flex items-center justify-between mb-8 no-print">
+      <div className="flex items-center justify-between mb-8 no-print flex-wrap gap-3">
         <div>
           <h1 className="text-3xl font-extrabold">Test History</h1>
           <p className="text-muted-foreground mt-1">{results.length} test{results.length !== 1 ? 's' : ''} logged</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-wrap">
+          <CsvExportButton />
           <PrintButton />
           <Link href="/log" className="px-5 py-2.5 rounded-full bg-primary text-white font-semibold text-sm hover:opacity-90 transition-opacity">
             + Log Test
@@ -48,7 +51,7 @@ export default async function HistoryPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="bg-white rounded-2xl border border-border/60 shadow-sm overflow-hidden">
+          <div className="bg-white dark:bg-card rounded-2xl border border-border/60 shadow-sm overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">
@@ -58,6 +61,7 @@ export default async function HistoryPage() {
                   <TableHead className="font-semibold text-foreground">Reading</TableHead>
                   <TableHead className="font-semibold text-foreground">Composite</TableHead>
                   <TableHead className="font-semibold text-foreground no-print">Notes</TableHead>
+                  <TableHead className="font-semibold text-foreground no-print">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -93,6 +97,17 @@ export default async function HistoryPage() {
                             ))}
                           </div>
                         )}
+                      </TableCell>
+                      <TableCell className="no-print whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <Link
+                            href={`/history/${r.id}/edit`}
+                            className="text-xs text-primary hover:underline px-2.5 py-1 border border-primary/30 rounded-full transition-colors hover:bg-primary/5"
+                          >
+                            Edit
+                          </Link>
+                          <DeleteTestButton id={r.id} />
+                        </div>
                       </TableCell>
                     </TableRow>
                   )

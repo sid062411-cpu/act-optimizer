@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db'
 import { computeSectionStats, computeScoreEntries, computeProjectedDate, computeTestsNeeded } from '@/lib/analytics'
+import { getPercentile } from '@/lib/actScales'
 import { ScoreTrendChart } from '@/components/ScoreTrendChart'
 import { PredictionCard } from '@/components/PredictionCard'
 import { GoalCard } from '@/components/GoalCard'
@@ -34,6 +35,7 @@ export default async function DashboardPage() {
   const delta = prev !== null ? latest.compositeScore - prev.compositeScore : null
   const compositeGap = 36 - latest.compositeScore
   const compositePct = Math.round((latest.compositeScore / 36) * 100)
+  const percentile = getPercentile(latest.compositeScore)
 
   const dates = results.map((r) => r.date)
   const compositeScores = results.map((r) => r.compositeScore)
@@ -67,6 +69,9 @@ export default async function DashboardPage() {
           <div className="flex items-end gap-3 flex-wrap">
             <span className="text-7xl font-extrabold leading-none">{latest.compositeScore}</span>
             <span className="text-3xl font-bold text-muted-foreground mb-2">/ 36</span>
+            <span className="mb-2 px-3 py-1 rounded-full text-sm font-bold bg-primary/10 text-primary">
+              {percentile}th percentile
+            </span>
             {delta !== null && (
               <span className={`mb-2 px-3 py-1 rounded-full text-sm font-bold ${
                 delta > 0 ? 'bg-emerald-100 text-emerald-700' :
